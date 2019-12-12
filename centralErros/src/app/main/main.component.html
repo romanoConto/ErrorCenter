@@ -1,0 +1,116 @@
+<mat-toolbar>
+	<i class="fa-2x mr-2 fas fa-bug"></i>
+	<span>Central <br> Erros</span>
+	<div class="w-100 text-right">
+		<h5>Seja Bem Vindo Usuário</h5>
+		<small>Seu token é: 12345678909999999</small>
+	</div>
+</mat-toolbar>
+
+
+<div class="mx-5 my-3">
+	<div class="d-flex">
+		<div class="d-flex flex-grow-1">
+			<mat-form-field class="mr-2" >
+				<mat-label>Selecione um item</mat-label>
+				<mat-select [(value)]="filter.environment" [(ngModel)]="environment" (ngModelChange)="onFilter()">
+					<mat-option>Limpar seleção</mat-option>
+					<mat-option value="production">Produção</mat-option>
+					<mat-option value="test">Homologação</mat-option>
+					<mat-option value="development">Desenvolvimento</mat-option>
+				</mat-select>
+			</mat-form-field>
+		
+			<mat-form-field class="mr-2" >
+				<mat-label>Ordenar por</mat-label>
+				<mat-select [(value)]="filter.order" [(ngModel)]="order" (ngModelChange)="onFilter()">
+					<mat-option>Limpar seleção</mat-option>
+					<mat-option value="level">Nivel</mat-option>
+					<mat-option value="frequency">Frequência</mat-option>
+				</mat-select>
+			</mat-form-field>
+		</div>
+	
+		<div class="d-flex ">
+			
+			<mat-form-field>
+				<mat-label>Buscar por</mat-label>
+				<mat-select [(value)]="filter.search" [(ngModel)]="search" (ngModelChange)="onFilter()">
+					<mat-option>Fechar busca</mat-option>
+					<mat-option value="level">Nível</mat-option>
+					<mat-option value="description">Descrição</mat-option>
+					<mat-option value="origin">Origem</mat-option>
+				</mat-select>
+			</mat-form-field>
+			
+			<mat-form-field [hidden]="search == none">
+				<input matInput placeholder="Buscar" [(ngModel)]="filter.searchValue" (keyup)="onFilter()">
+			</mat-form-field>
+		</div>
+	</div>
+
+	<div class="mat-elevation-z8"  *ngIf="hasData">
+		<div class="table-responsive">
+			<table mat-table [dataSource]="dataSource">
+			
+				<!-- <ng-container matColumnDef="logName">
+					<th mat-header-cell *matHeaderCellDef> Log </th>
+					<td mat-cell *matCellDef="let log"> 
+						<i class="mr-1 pt-1 fas fa-archive" *ngIf="log.isArchived"></i>
+						{{log.log}} 
+					</td>
+				</ng-container> -->
+				
+				<ng-container matColumnDef="level">
+					<th mat-header-cell *matHeaderCellDef> Nivel </th>
+					<td mat-cell *matCellDef="let log"> {{log.level}} </td>
+				</ng-container>
+		
+				
+				<ng-container matColumnDef="description">
+					<th mat-header-cell *matHeaderCellDef> Descrição </th>
+					<td mat-cell *matCellDef="let log"> {{log.description}} </td>
+				</ng-container>
+			
+				<ng-container matColumnDef="origin">
+					<th mat-header-cell *matHeaderCellDef> Origen </th>
+					<td mat-cell *matCellDef="let log"> {{log.origin}} </td>
+				</ng-container>
+			
+				<ng-container matColumnDef="date">
+					<th mat-header-cell *matHeaderCellDef> Data </th>
+					<td mat-cell *matCellDef="let log"> {{log.date}} </td>
+				</ng-container>
+
+				<ng-container matColumnDef="frequency">
+					<th mat-header-cell *matHeaderCellDef> Frequencia </th>
+					<td mat-cell *matCellDef="let log"> {{log.frequency}} </td>
+				</ng-container>
+
+				<ng-container matColumnDef="actions" stickyEnd>
+					<th mat-header-cell *matHeaderCellDef  [style.width.px]="140"></th>
+					<td class="text-right" mat-cell *matCellDef="let log"  [style.width.px]="140">
+						<i class="fa-fw ml-2 far fa-eye" (click)="show(log.id)" matTooltip="Mostrar log"></i>
+						<i class="fa-fw ml-2 fas fa-arrow-alt-circle-right" *ngIf="!log.isArchived" (click)="archive(log.id, log)" matTooltip="Arquivar log"></i>
+						<i class="fa-fw ml-2 fas fa-arrow-alt-circle-left" *ngIf="log.isArchived"  (click)="unarchive(log.id, log)" matTooltip="Desarquivar log"></i>
+						<i class="fa-fw ml-2 fas fa-trash-alt" (click)="delete(log.id)" matTooltip="Deletar log"></i>
+						
+					</td>
+				</ng-container>
+			
+				<tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+				<tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+			</table>
+			
+		</div>
+		<mat-paginator [pageSizeOptions]="[10, 20, 30]" showFirstLastButtons></mat-paginator>
+	</div>
+
+	<div class="blankslate" *ngIf="!hasData">
+		<div class="icon">
+			<i class="fas fa-ghost"></i>
+		</div>
+		<div class="shadowGhost"></div>
+		<span class="text-center">Opss.. Não localizamos nenhum log.</span>
+	</div>
+</div>
